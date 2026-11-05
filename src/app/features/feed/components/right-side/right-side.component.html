@@ -1,0 +1,85 @@
+<aside class="bg-white sticky top-21 rounded-3xl shadow-sm border border-brand-200/60 p-4 font-sans">
+
+  <!-- Header Title & Count -->
+  <div class="flex items-center justify-between mb-4 px-1">
+    <div class="flex items-center gap-2">
+      <i class="fa-solid fa-user-group text-brand-700 text-[1.1rem]"></i>
+      <h2 class="font-bold text-brand-900 text-[17px]">Suggested Friends</h2>
+    </div>
+    <span class="bg-brand-50 text-brand-800 text-xs font-bold px-2.5 py-1 rounded-full border border-brand-200/50">
+      {{suggestions().length}}
+    </span>
+  </div>
+
+  <!-- Search Friends Input -->
+  <div class="relative mb-4">
+    <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+      <i class="fa-solid fa-magnifying-glass text-sm"></i>
+    </div>
+    <input type="text"
+      class="bg-brand-50/30 border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 placeholder-brand-400 outline-none transition-all"
+      placeholder="Search friends..." aria-label="Search friends" />
+  </div>
+
+  <!-- Friends List Container -->
+  <div class="grid gap-3 overflow-y-auto scrollbar-none max-h-88 pb-1">
+
+    @for (suggestion of suggestions(); track suggestion._id) {
+    <!-- Friend Item Card -->
+    <div class="p-3 border border-brand-200/80 rounded-2xl bg-white hover:border-brand-300 transition-colors shadow-xs">
+      <div class="flex items-start gap-3">
+
+        <!-- User Avatar -->
+        <img [src]="suggestion.photo" [alt]="suggestion.name"
+          class="w-11 h-11 rounded-full object-cover shrink-0 bg-brand-50 border border-brand-200" />
+
+        <div class="flex-1 min-w-0 flex flex-col gap-2">
+
+          <!-- Name & Follow Button -->
+          <div class="flex items-center justify-between gap-2 mt-0.5">
+            <div class="flex flex-col min-w-0">
+              <span class="text-[14px] font-bold text-brand-900 truncate leading-tight">
+                {{suggestion.name}}
+              </span>
+              <span class="text-[13px] text-brand-500 truncate leading-tight mt-0.5">
+                @{{suggestion.username}}
+              </span>
+            </div>
+
+            <!-- Follow Button -->
+            <button
+              class="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-700 text-white hover:bg-brand-800 text-[13px] font-bold rounded-xl transition-colors cursor-pointer shadow-xs">
+              <i class="fa-solid fa-user-plus text-[11px]"></i>
+              Follow
+            </button>
+          </div>
+
+          <!-- Badges / Stats -->
+          <div class="flex items-center gap-2">
+            <span
+              class="text-[11px] font-semibold text-brand-700 bg-brand-50 px-2 py-1 rounded-lg border border-brand-200/50">
+              {{suggestion.followersCount}} followers
+            </span>
+            @if(suggestion.mutualFollowersCount) {
+            <span
+              class="text-[11px] font-semibold text-brand-700 bg-brand-50 px-2 py-1 rounded-lg border border-brand-200/50">
+              {{suggestion.mutualFollowersCount}} mutual
+            </span>
+            }
+          </div>
+
+        </div>
+      </div>
+    </div>
+    }
+
+  </div>
+
+  <!-- View More Button -->
+  <!-- routerLink="/suggestions" -->
+  <button
+    class="w-full cursor-pointer mt-3 py-2.5 bg-white border border-brand-300 rounded-xl text-[14px] font-bold text-brand-800 hover:bg-brand-50 hover:border-brand-400 transition-all outline-none focus:ring-4 focus:ring-brand-200 shadow-xs">
+    View more
+  </button>
+
+</aside>

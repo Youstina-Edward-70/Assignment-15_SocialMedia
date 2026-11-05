@@ -1,0 +1,287 @@
+@if (post()) {
+<div class="bg-white rounded-2xl my-3 shadow-xs border border-brand-200/60 p-4 font-sans">
+
+  <!-- User Details Section -->
+  <div class="flex items-start justify-between mb-3">
+    <div class="flex items-center gap-3">
+      <img [src]="post().user.photo" [alt]="post().user.name"
+        class="size-10 rounded-full object-cover shrink-0 bg-brand-50 border border-brand-200" />
+
+      <div>
+        <span class="text-[15px] font-bold text-brand-900 leading-tight hover:underline cursor-pointer">
+          {{post().user!.name}}
+        </span>
+        <div class="flex items-center text-[13px] text-brand-500 mt-0.5 gap-1">
+          <span>@ {{post().user.username}} </span>
+          <span>&middot;</span>
+          <a [routerLink]="['/posts', post()._id]" class="hover:underline cursor-pointer"> {{post().createdAt |
+            timeCreated}} </a>
+          <span>&middot;</span>
+
+          <div class="relative inline-block text-left">
+
+            <!-- Trigger Button -->
+            <button (click)="isMyPost()? isDropdownOpen.update(v => !v) : null" type="button"
+              [class]="isMyPost()? 'px-2.5 py-1 bg-brand-50/60 hover:bg-brand-100/60 border border-brand-200 rounded-xl shadow-xs cursor-pointer' : 'cursor-default'"
+              class="flex items-center gap-1 text-brand-900 text-xs font-semibold transition-all">
+              <i [class]="'fa-solid ' + selectedIcon() + ' text-brand-700 text-sm'"></i>
+              <span>{{ selectedPrivacy() }}</span>
+              @if (isMyPost()) {
+              <i class="fa-solid fa-chevron-down text-2xs text-brand-500 transition-transform"
+                [class.rotate-180]="isDropdownOpen()"></i>
+              }
+            </button>
+
+            <!-- Dropdown Menu -->
+            @if (isDropdownOpen() && isMyPost()) {
+            <div
+              class="absolute left-0 z-50 mt-2 w-44 rounded-2xl bg-white border border-brand-200 shadow-xl p-1.5 space-y-0.5">
+              @for (option of privacyOptions; track $index + '-' + option.value) {
+              <button (click)="setPrivacy($index)" type="button"
+                class="flex items-center gap-3 w-full px-3 py-2 text-xs font-semibold text-brand-900 hover:bg-brand-50 rounded-xl transition-colors cursor-pointer">
+                <i [class]="'fa-solid ' + option.icon + ' text-brand-700 w-4 text-center'"></i>
+                <span>{{ option.label }}</span>
+              </button>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dropdown Menu Option Button -->
+    <div class="relative">
+      <button (click)="toggleOptionsDropdown()" id="dropdownMenuIconButton"
+        class="text-brand-700 bg-transparent border border-transparent hover:bg-brand-50 focus:ring-4 focus:ring-brand-200 font-medium leading-5 rounded-xl text-sm p-2.5 focus:outline-none transition-colors cursor-pointer"
+        type="button">
+        <i class="fa-solid fa-ellipsis"></i>
+      </button>
+
+      <!-- Dropdown Menu Content -->
+      @if (isOptionsDropdownOpen()) {
+      <div id="dropdownDots"
+        class="z-30 absolute right-0 bg-white border border-brand-200 rounded-2xl shadow-xl w-44 overflow-hidden py-1.5 mt-1">
+        <ul class="text-sm text-brand-800 font-medium space-y-0.5 px-1.5" aria-labelledby="dropdownMenuIconButton">
+          <li>
+            <button (click)="toggleBookmarkPost()" [class.cursor-pointer]="!isBookmarking()"
+              [class.cursor-not-allowed]="isBookmarking()"
+              class="inline-flex items-center gap-2.5 w-full px-3.5 py-2 hover:bg-brand-50 hover:text-brand-900 rounded-xl transition-colors">
+              <i class="fa-regular fa-bookmark text-brand-600 w-4"></i>
+              {{isBookmarking()? 'Saving...' : post().bookmarked? 'Unsave post' : 'Save post'}}
+            </button>
+          </li>
+          @if(isMyPost()) {
+          @if (!isUpdateMode()) {
+          <li>
+            <button (click)="openUpdateMode()"
+              class="inline-flex items-center gap-2.5 w-full px-3.5 py-2 hover:bg-brand-50 hover:text-brand-900 rounded-xl transition-colors cursor-pointer">
+              <i class="fa-regular fa-pen-to-square text-brand-600 w-4"></i> Edit post
+            </button>
+          </li>
+          }
+          <li>
+            <hr class="my-1 border-brand-100">
+          </li>
+          <li>
+            <button (click)="openDeleteModal()"
+              class="inline-flex items-center gap-2.5 w-full px-3.5 py-2 hover:bg-red-50 hover:text-red-700 text-red-600 rounded-xl transition-colors cursor-pointer font-semibold">
+              <i class="fa-regular fa-trash-can w-4"></i>
+              Delete post
+            </button>
+          </li>
+          }
+        </ul>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Post Content Section -->
+  <div class="text-[15px] text-brand-900 mb-4 space-y-2">
+    @if (isUpdateMode()) {
+    <!-- Textarea -->
+    <div class="mb-3">
+      <textarea [formControl]="editbody" rows="4"
+        class="w-full p-3 border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-300 text-brand-900 resize-none text-sm placeholder:text-brand-400 bg-transparent transition-all">
+        {{post().body}}
+        </textarea>
+    </div>
+
+    <!-- Cancel & Save buttons -->
+    <div class="flex items-center justify-end gap-2">
+      <!-- Cancel -->
+      <button type="button" (click)="closeUpdateMode()"
+        class="px-5 py-2.5 text-xs font-semibold text-brand-700 bg-transparent border border-brand-200 rounded-full hover:bg-brand-50 transition-all cursor-pointer">
+        Cancel
+      </button>
+
+      <!-- Save -->
+      <button type="button" (click)="saveUpdate()" [disabled]="editbody.invalid" [class.opacity-50]="editbody.invalid"
+        [class.cursor-not-allowed]="editbody.invalid"
+        [class]="editbody.invalid? 'opacity-50 cursor-not-allowed' : 'hover:bg-brand-800 cursor-pointer'"
+        class="px-6 py-2.5 text-xs font-semibold text-white bg-brand-700 rounded-full transition-all shadow-xs">
+        @if(isUpdating()) {
+        <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+        }
+        <span>{{ isUpdating() ? 'Saving...' : 'Save' }}</span>
+      </button>
+    </div>
+    } @else {
+    @if(post().bookmarked){
+    <div
+      class="mb-3 inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-700 border border-brand-200">
+      <i class="fa-regular fa-bookmark"></i>
+      Saved
+    </div>
+    }
+    @if(post().body){
+    <p class="leading-relaxed wrap-break-word">{{post().body}}</p>
+    }
+    }
+    @if(post().image) {
+    <img [src]="post().image" (click)="openImage(post().image)"
+      class="w-full max-h-90 object-cover rounded-xl border border-brand-200/60 shadow-xs mt-2 cursor-pointer"
+      [alt]="post().body" />
+    }
+    @if (post().isShare && post().sharedPost) {
+    <div class="mx-4 my-3 overflow-hidden rounded-xl border border-brand-200 bg-brand-50/50">
+      <div class="p-3">
+        <div class="mb-2 flex items-center gap-2">
+          <img [alt]="post().sharedPost?.user?.name" class="h-9 w-9 rounded-full object-cover"
+            [src]="post().sharedPost?.user?.photo">
+          <div class="min-w-0">
+            <p class="truncate text-sm font-bold text-brand-900">{{post().sharedPost?.user?.name}}</p>
+            <p class="truncate text-xs text-brand-500">@{{post().sharedPost?.user?.username}}</p>
+          </div>
+          <button [routerLink]="['/posts', post().sharedPost?._id]" type="button"
+            class="ml-auto inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-brand-700 hover:bg-brand-100 transition-colors cursor-pointer">
+            Original Post
+            <i class="fa-solid fa-up-right-from-square"></i>
+          </button>
+        </div>
+        @if(post().sharedPost?.body) {
+        <p class="whitespace-pre-wrap text-sm leading-relaxed text-brand-800">{{post().sharedPost?.body}}</p>
+        }
+        @if(post().sharedPost?.image) {
+        <img (click)="openImage(post().sharedPost?.image!)" alt="Shared post"
+          class="max-h-140 w-full object-cover rounded-xl cursor-pointer" [src]="post().sharedPost?.image">
+        }
+      </div>
+
+    </div>
+    }
+  </div>
+
+  <!-- Likes, Shares & Comments Counts Row -->
+  <div class="flex items-center justify-between text-[13px] text-brand-500 mb-3 px-1">
+    <div (click)="openLikes()" [class.cursor-pointer]="post().likesCount > 0"
+      [class.cursor-default]="post().likesCount === 0" class="flex items-center gap-1.5 text-brand-700 font-medium">
+      <div class="w-5 h-5 rounded-full bg-brand-700 text-white flex items-center justify-center text-2xs">
+        <i class="fa-solid fa-thumbs-up"></i>
+      </div>
+      <span>{{post().likesCount}} likes</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="cursor-pointer hover:underline">{{post().sharesCount}} shares</span>
+      <span class="cursor-pointer hover:underline">{{post().commentsCount}} comments</span>
+      <!-- route to post details page -->
+      <button [routerLink]="['/posts', post()._id]"
+        class="font-bold cursor-pointer text-brand-800 hover:text-brand-900 hover:underline">
+        View details
+      </button>
+    </div>
+  </div>
+
+  <hr class="border-t border-brand-100 mb-1" />
+
+  <!-- Action Buttons Row (Like - Comment - Share) -->
+  <div class="flex items-center justify-between gap-1 px-1 py-1">
+    <button (click)="toggleLikePost()" type="button" [disabled]="isLiking()"
+      [class]="isLikedByMe()? 'bg-brand-100 hover:bg-brand-100 text-brand-900' : 'text-brand-800'"
+      class="flex-1 cursor-pointer flex items-center justify-center gap-2 font-semibold text-[14px] hover:bg-brand-50 py-2.5 rounded-xl transition-colors">
+      @if(isLiking()) {
+      <i class="fa-solid fa-spinner fa-spin text-lg text-brand-600 animate-pulse"></i>
+      Liking...
+      } @else {
+      <i class="fa-regular fa-thumbs-up text-lg text-brand-600"></i>
+      Like
+      }
+    </button>
+    <button (click)="toggleCommentsSection()" type="button"
+      class="flex-1 flex cursor-pointer items-center justify-center gap-2 text-brand-800 font-semibold text-[14px] hover:bg-brand-50 py-2.5 rounded-xl transition-colors">
+      <i class="fa-regular fa-message text-lg text-brand-600"></i>
+      Comment
+    </button>
+    <button (click)="openShareModal()" type="button"
+      class="flex-1 flex cursor-pointer items-center justify-center gap-2 text-brand-800 font-semibold text-[14px] hover:bg-brand-50 py-2.5 rounded-xl transition-colors">
+      <i class="fa-solid fa-share text-lg text-brand-600"></i>
+      Share
+    </button>
+  </div>
+
+  <!-- Comments -->
+  @if(!isCommentsSectionOpen() && post().topComment) {
+  <div class="bg-brand-50/50 border border-brand-200/70 rounded-2xl p-4 mt-3 space-y-2.5">
+
+    <!-- Top Comment Label -->
+    <div class="text-[11px] font-bold text-brand-600 tracking-wider uppercase">
+      TOP COMMENT
+    </div>
+
+    <!-- User & Content Container -->
+    <div class="flex items-start gap-3">
+      <img [src]="post().topComment?.commentCreator?.photo" [alt]="post().topComment?.commentCreator?.name"
+        class="w-9 h-9 rounded-full object-cover border border-brand-200 shrink-0" />
+      <div class="flex-1 flex flex-col min-w-0 bg-white border border-brand-200/60 rounded-2xl p-3 shadow-2xs">
+        <span class="text-xs font-bold text-brand-900">
+          {{ post().topComment?.commentCreator?.name }}
+        </span>
+        @if(post().topComment?.content) {
+        <p class="text-xs text-brand-800 mt-0.5 wrap-break-word">
+          {{ post().topComment?.content }}
+        </p>
+        }
+        @if(post().topComment?.image) {
+        <img alt="Top comment" class="mt-2 max-h-44 w-full rounded-lg object-cover" [src]="post().topComment?.image">
+        }
+      </div>
+    </div>
+
+    <!-- View All Comments Button -->
+    <button (click)="toggleCommentsSection()" type="button"
+      class="text-xs font-bold text-brand-700 hover:text-brand-900 transition-colors cursor-pointer inline-block pt-1">
+      View all comments
+    </button>
+  </div>
+  }
+  @if (hasOpenedComments()) {
+  <div [class.hidden]="!isCommentsSectionOpen()">
+    <app-comments [postId]="post()._id" (commentsChanged)="changeDetected.emit()"></app-comments>
+  </div>
+  }
+</div>
+}
+
+<!-- Reusable Modals -->
+@if (isImageOpen()) {
+<app-image-modal [imageUrl]="imgToPreview" [altText]="'Enlarged post image'" (closeModal)="closeImage()">
+</app-image-modal>
+}
+
+@if (isLikesOpen() && post().likesCount > 0) {
+<app-likes-modal [postId]="post()._id" [likesCount]="post().likesCount" (closeModal)="closeLikes()">
+</app-likes-modal>
+}
+
+@if (isShareModalOpen() && !post().isShare) {
+<app-share-modal [post]="post()" (shareSuccess)="changeDetected.emit()" (closeModal)="closeShareModal()">
+</app-share-modal>
+}
+
+@if (isDeleteModalOpen()) {
+<app-delete-modal heading="Delete this post?"
+  message="This post will be permanently removed from your profile and feed." confirmText="Delete post"
+  loadingText="Deleting post..." (confirm)="onConfirmDeletePost()" (closeModal)="closeDeleteModal()">
+</app-delete-modal>
+}

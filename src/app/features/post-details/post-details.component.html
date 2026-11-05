@@ -1,0 +1,10 @@
+<section class="min-h-screen container px-3 py-4">
+  <div class="mx-auto max-w-3xl space-y-4">
+    <button (click)="goBack()"
+      class="inline-flex items-center gap-2 rounded-[8px] border border-brand-200/60 bg-white px-3 py-2 text-sm font-bold text-brand-700 transition hover:bg-brand-50 cursor-pointer">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back
+    </button>
+    <app-single-post [post]="post()"></app-single-post>
+  </div>
+</section>

@@ -1,0 +1,254 @@
+<section>
+  <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl border border-brand-200/60 p-6 sm:p-8 space-y-8">
+
+    <!-- Header Section -->
+    <div class="text-center space-y-2">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-200/50 text-brand-700 mb-2">
+        <i class="fa-solid fa-user-plus text-2xl"></i>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-brand-900">
+        Create Your Account
+      </h1>
+      <p class="text-sm text-brand-700 max-w-md mx-auto">
+        Join our community today! Fill in your details below to get started with your fresh personalized experience.
+      </p>
+    </div>
+
+    <!-- Registration Form Template -->
+    <form class="space-y-5" [formGroup]="registerForm" (ngSubmit)="submit()">
+
+      <!-- Full Name -->
+      <div>
+        <label for="name" class="block mb-2 text-sm font-medium text-brand-900">
+          Full Name <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <input type="text" id="name" formControlName="name"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="John Doe" />
+        </div>
+        @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+        @if (registerForm.get('name')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Full name is required.</span>
+        </p>
+        }
+        @if (registerForm.get('name')?.hasError('minlength')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Name must be at least 3 characters.</span>
+        </p>
+        }
+        }
+      </div>
+
+      <!-- Username (Optional) -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label for="username" class="block text-sm font-medium text-brand-900">
+            Username
+          </label>
+          <span class="text-xs text-brand-500 font-normal">Optional</span>
+        </div>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-at"></i>
+          </div>
+          <input type="text" id="username" formControlName="username"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="johndoe99" />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block mb-2 text-sm font-medium text-brand-900">
+          Email Address <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <input type="email" id="email" formControlName="email"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="name@example.com" />
+        </div>
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+        @if (registerForm.get('email')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Email is required.</span>
+        </p>
+        }
+        @if (registerForm.get('email')?.hasError('email')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Please enter a valid email address (e.g., user@domain.com).</span>
+        </p>
+        }
+        }
+      </div>
+
+      <!-- Gender -->
+      <div>
+        <label for="gender" class="block mb-2 text-sm font-medium text-brand-900">
+          Gender <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-venus-mars"></i>
+          </div>
+          <select id="gender" formControlName="gender"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 transition-colors">
+            <option value="" disabled selected>Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        @if (registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched &&
+        registerForm.get('gender')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Please select your gender.</span>
+        </p>
+        }
+      </div>
+
+      <!-- Date of Birth -->
+      <div>
+        <label for="dob" class="block mb-2 text-sm font-medium text-brand-900">
+          Date of Birth <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-calendar-days"></i>
+          </div>
+          <input type="date" id="dob" formControlName="dateOfBirth"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 transition-colors" />
+        </div>
+        @if (registerForm.get('dateOfBirth')?.invalid && registerForm.get('dateOfBirth')?.touched &&
+        registerForm.get('dateOfBirth')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Date of birth is required.</span>
+        </p>
+        }
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block mb-2 text-sm font-medium text-brand-900">
+          Password <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <input #pass type="password" formControlName="password" id="password"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 pe-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="••••••••" />
+          <div (click)="togglePassword(pass)"
+            class="absolute inset-y-0 inset-e-0 flex items-center pe-3.5 text-brand-500 cursor-pointer">
+            <i class="fa-solid" [class.fa-eye]="eyeOpendPass()" [class.fa-eye-slash]="!eyeOpendPass()"></i>
+          </div>
+        </div>
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+        @if (registerForm.get('password')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Password is required.</span>
+        </p>
+        }
+        @if (registerForm.get('password')?.hasError('pattern')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.</span>
+        </p>
+        }
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label for="confirm-password" class="block mb-2 text-sm font-medium text-brand-900">
+          Confirm Password <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <input #rePass type="password" id="confirm-password" formControlName="rePassword"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 pe-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="••••••••" />
+          <div (click)="togglePassword(rePass)"
+            class="absolute inset-y-0 inset-e-0 flex items-center pe-3.5 text-brand-500 cursor-pointer">
+            <i class="fa-solid" [class.fa-eye]="eyeOpendRePass()" [class.fa-eye-slash]="!eyeOpendRePass()"></i>
+          </div>
+        </div>
+        @if (registerForm.get('rePassword')?.invalid && registerForm.get('rePassword')?.touched) {
+        @if (registerForm.get('rePassword')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Please confirm your password.</span>
+        </p>
+        }
+        @if (registerForm.get('rePassword')?.hasError('rePassword')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Passwords do not match.</span>
+        </p>
+        }
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+        class="w-full text-white bg-brand-700 hover:bg-brand-800 focus:ring-4 focus:outline-none focus:ring-brand-300 font-medium rounded-xl text-sm px-5 py-3 text-center transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg">
+        @if (loading()) {
+        <i class="fa-solid fa-spinner fa-spin text-base"></i>
+        }
+        <span>Create Account</span>
+      </button>
+
+      @if (msgErr()) {
+      <div class="rounded-xl border border-red-200 bg-red-50/80 p-4 shadow-xs transition-all duration-300">
+        <div class="flex items-start gap-3">
+
+          <!-- Error Icon -->
+          <div class="shrink-0 text-red-600 mt-0.5">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+          </div>
+
+          <!-- Error Content -->
+          <div class="flex-1 space-y-1">
+            <h3 class="text-sm font-semibold text-red-900">
+              Submission Failed
+            </h3>
+            <!-- Error message container -->
+            <p class="text-xs text-red-700 leading-relaxed">
+              {{ msgErr() }}
+            </p>
+          </div>
+        </div>
+      </div>
+      }
+
+    </form>
+
+    <!-- Footer / Login Navigation -->
+    <div class="text-center pt-2 border-t border-brand-200/50">
+      <p class="text-sm text-brand-700">
+        Already have an account?
+        <a routerLink="/login"
+          class="font-semibold text-brand-800 hover:text-brand-900 hover:underline transition-colors">
+          Log in here
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,120 @@
+<section>
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-brand-200/60 p-6 sm:p-8 space-y-8">
+
+    <!-- Header Section -->
+    <div class="text-center space-y-2">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-200/50 text-brand-700 mb-2">
+        <i class="fa-solid fa-right-to-bracket text-2xl"></i>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-brand-900">
+        Welcome Back
+      </h1>
+      <p class="text-sm text-brand-700 max-w-xs mx-auto">
+        Please enter your details to sign in to your account and continue your journey.
+      </p>
+    </div>
+
+    <!-- Login Form Template -->
+    <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="submit()">
+
+      <!-- Email / Username -->
+      <div>
+        <label for="login" class="block mb-2 text-sm font-medium text-brand-900">
+          Email or Username <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <input type="text" id="text" formControlName="login"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="name@example.com or johndoe99" />
+        </div>
+        @if (loginForm.get('login')?.invalid && loginForm.get('login')?.touched &&
+        loginForm.get('login')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Please enter a valid email or username.</span>
+        </p>
+        }
+      </div>
+
+      <!-- Password -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label for="password" class="block text-sm font-medium text-brand-900">
+            Password <span class="text-red-500">*</span>
+          </label>
+          <a routerLink="/forget"
+            class="text-xs font-semibold text-brand-700 hover:text-brand-900 hover:underline transition-colors">
+            Forget password?
+          </a>
+        </div>
+        <div class="relative">
+          <div class="absolute inset-y-0 inset-s-0 flex items-center ps-3.5 pointer-events-none text-brand-500">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <input #pass type="password" id="password" formControlName="password"
+            class="bg-white border border-brand-300 text-brand-900 text-sm rounded-xl focus:ring-brand-500 focus:border-brand-500 block w-full ps-10 pe-10 p-2.5 transition-colors placeholder-brand-500 outline-0"
+            placeholder="••••••••" />
+          <div (click)="togglePassword(pass)"
+            class="absolute inset-y-0 inset-e-0 flex items-center pe-3.5 text-brand-500 cursor-pointer">
+            <i class="fa-solid" [class.fa-eye]="eyeOpend()" [class.fa-eye-slash]="!eyeOpend()"></i>
+          </div>
+        </div>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched &&
+        loginForm.get('password')?.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Password is required.</span>
+        </p>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+        class="w-full text-white bg-brand-700 hover:bg-brand-800 focus:ring-4 focus:outline-none focus:ring-brand-300 font-medium rounded-xl text-sm px-5 py-3 text-center transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg">
+        @if (loading()) {
+        <i class="fa-solid fa-spinner fa-spin text-base"></i>
+        }
+        <span>Sign In</span>
+      </button>
+
+      @if (msgErr()) {
+      <div class="rounded-xl border border-red-200 bg-red-50/80 p-4 shadow-xs transition-all duration-300">
+        <div class="flex items-start gap-3">
+
+          <!-- Error Icon -->
+          <div class="shrink-0 text-red-600 mt-0.5">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+          </div>
+
+          <!-- Error Content -->
+          <div class="flex-1 space-y-1">
+            <h3 class="text-sm font-semibold text-red-900">
+              Submission Failed
+            </h3>
+            <!-- Error message container -->
+            <p class="text-xs text-red-700 leading-relaxed">
+              {{ msgErr() }}
+            </p>
+          </div>
+        </div>
+      </div>
+      }
+
+    </form>
+
+    <!-- Footer / Register Navigation -->
+    <div class="text-center pt-2 border-t border-brand-200/50">
+      <p class="text-sm text-brand-700">
+        Don't have an account yet?
+        <a routerLink="/register"
+          class="font-semibold text-brand-800 hover:text-brand-900 hover:underline transition-colors">
+          Create account
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>

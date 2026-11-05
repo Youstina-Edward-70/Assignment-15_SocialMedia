@@ -1,0 +1,68 @@
+@if (isOpen()) {
+<div (click)="close()"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs transition-opacity">
+
+  <!-- Modal Box Container -->
+  <div (click)="$event.stopPropagation()"
+    class="bg-white border border-brand-200 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden p-6 relative font-sans animate-in fade-in zoom-in-95 duration-150">
+
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between pb-4 mb-4 border-b border-brand-100">
+      <h3 class="text-lg font-bold text-brand-900">
+        {{ title() }}
+      </h3>
+
+      <!-- Close Button (X) -->
+      <button (click)="close()" type="button"
+        class="text-brand-400 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+        aria-label="Close modal">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body (Icon & Warning Message) -->
+    <div class="flex items-start gap-4 py-3">
+
+      <!-- Warning Icon Container -->
+      <div
+        class="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center shrink-0">
+        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <h4 class="text-base font-bold text-brand-900">
+          {{ heading() }}
+        </h4>
+        <p class="text-sm text-brand-500 leading-relaxed">
+          {{ message() }}
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer (Cancel & Confirm Delete Buttons) -->
+    <div class="flex items-center justify-end gap-3 pt-5 mt-4 border-t border-brand-100">
+
+      <!-- Cancel Button -->
+      <button (click)="close()" type="button"
+        class="px-5 py-2.5 rounded-xl border border-brand-300 text-brand-800 hover:bg-brand-50 font-bold text-sm transition-colors cursor-pointer">
+        Cancel
+      </button>
+
+      <!-- Delete Action Button -->
+      <button (click)="confirmDelete()" type="button" [disabled]="isDeleting()"
+        [class]="isDeleting() ? 'bg-red-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 cursor-pointer'"
+        class="px-5 py-2.5 rounded-xl text-white font-bold text-sm shadow-sm transition-colors flex items-center gap-2">
+        @if (isDeleting()) {
+        <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+        <span>{{ loadingText() }}</span>
+        } @else {
+        <span>{{ confirmText() }}</span>
+        }
+      </button>
+
+    </div>
+
+  </div>
+</div>
+}

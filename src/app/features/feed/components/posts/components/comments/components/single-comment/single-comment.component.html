@@ -1,0 +1,100 @@
+<div class="space-y-3">
+  <div class="flex items-start gap-3 group">
+    <img [src]="comment().commentCreator.photo" [alt]="comment().commentCreator.name"
+      class="w-9 h-9 rounded-full object-cover border border-brand-200 shrink-0 mt-0.5" />
+    <div class="flex-1 min-w-0">
+      <div class="bg-brand-50/70 border border-brand-200/60 rounded-2xl p-3.5 inline-block max-w-[90%] space-y-1">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs font-bold text-brand-900 leading-tight">
+            {{ comment().commentCreator.name }}
+          </span>
+          <span class="text-[11px] text-brand-500 font-medium leading-tight">
+            &#64;{{ comment().commentCreator.username }} &middot; {{ comment().createdAt | timeCreated }}
+          </span>
+        </div>
+        @if(isUpdateMode()) {
+        <div class="mt-2 flex items-center gap-2">
+          <input [formControl]="editbody"
+            class="w-full rounded-full border border-brand-300 bg-white px-3 py-1.5 text-sm" value="hello">
+          <button (click)="saveUpdate()" [disabled]="isUpdatingComment()"
+            class="rounded-full bg-brand-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-brand-800 disabled:opacity-60 transition-all cursor-pointer">
+            {{isUpdatingComment()? 'Saving...' : 'Save'}}
+          </button>
+          <button (click)="closeUpdateMode()"
+            class="rounded-full border border-brand-300 bg-white px-3 py-1.5 text-xs font-bold text-brand-700 hover:bg-brand-100 transition-all cursor-pointer">
+            Cancel
+          </button>
+        </div>
+        } @else {
+        @if (comment().content) {
+        <p class="text-xs text-brand-800 leading-relaxed wrap-break-word font-normal">
+          {{ comment().content }}
+        </p>
+        }
+
+        @if (comment().image) {
+        <img (click)="openImage(comment().image)" alt="Comment"
+          class="mt-2 max-h-52 w-full rounded-lg object-cover cursor-pointer" [src]="comment().image">
+        }
+        }
+      </div>
+
+      <!-- Actions (Date, Like, Edit, Delete) -->
+      <div class="flex justify-between items-center pr-4">
+        <div class="flex items-center gap-4 text-[11px] font-semibold text-brand-500 mt-1.5 px-2">
+          <span>{{ comment().createdAt | timeCreated }}</span>
+          <button (click)="toggleLikeComment()" type="button"
+            [class]="isCommentLikedByMe() ? 'text-brand-700 bg-brand-50 font-bold' : 'text-brand-500 font-semibold'"
+            class="hover:text-brand-800 transition-colors cursor-pointer flex items-center gap-1.5 px-2 py-1 rounded-lg">
+            {{isLikingComment()? 'Liking...' : 'Like'}} ({{ comment().likes.length || 0 }})
+          </button>
+          <button type="button" class="hover:text-brand-800 transition-colors cursor-pointer">
+            Reply @if(comment().repliesCount > 0) {({{ comment().repliesCount }})}
+          </button>
+        </div>
+
+        <!-- Dropdown Menu Option Button -->
+        @if(isMyComment()) {
+        <div class="relative">
+          <button (click)="toggleDropdown()" class="text-brand-500 hover:text-brand-800 p-1 cursor-pointer"
+            type="button">
+            <i class="fa-solid fa-ellipsis"></i>
+          </button>
+
+          <!-- Dropdown Menu Content -->
+          @if (isDropdownOpen()) {
+          <div
+            class="z-30 absolute right-0 bg-white border border-brand-200 rounded-[8px] shadow-lg w-28 overflow-hidden py-1 mt-1">
+            <ul class="text-[11px] text-brand-800 font-medium space-y-0.5 px-1">
+              <li>
+                <button (click)="openUpdateMode()"
+                  class="inline-flex items-center gap-1.5 w-full px-3 py-1.5 hover:bg-brand-50 text-brand-600 rounded-[8px] transition-colors cursor-pointer">
+                  <i class="fa-regular fa-pen-to-square w-4"></i> Edit
+                </button>
+              </li>
+              <li>
+                <button (click)="openDeleteModal()"
+                  class="inline-flex items-center gap-1.5 w-full px-3 py-1.5 hover:bg-red-50 text-red-600 rounded-[8px] transition-colors cursor-pointer font-semibold">
+                  <i class="fa-regular fa-trash-can w-4"></i> {{isDeletingComment()? 'Deleting...' : 'Delete'}}
+                </button>
+              </li>
+            </ul>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modals -->
+@if (isImageOpen()) {
+<app-image-modal [imageUrl]="comment().image" [altText]="comment().content" (closeModal)="closeImage()" />
+}
+@if (isDeleteModalOpen()) {
+<app-delete-modal heading="Delete this comment?" message="This comment will be permanently removed."
+  confirmText="Delete comment" loadingText="Deleting comment..." [isDeleting]="isDeletingComment()"
+  (confirm)="onConfirmDeleteComment()" (closeModal)="isDeleteModalOpen.set(false)">
+</app-delete-modal>
+}

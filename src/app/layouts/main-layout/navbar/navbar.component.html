@@ -1,0 +1,122 @@
+<nav class="bg-white sticky top-0 z-50 w-full border-b border-brand-200/60 shadow-xs">
+  <div class="max-w-screen-2xl flex items-center justify-between mx-auto px-4 sm:px-6 py-2.5">
+
+    <!-- Brand Logo & Name -->
+    <a routerLink="/feed" class="flex items-center gap-3 group cursor-pointer">
+      <div
+        class="w-10 h-10 rounded-xl bg-brand-700 text-white flex items-center justify-center shadow-md group-hover:bg-brand-800 transition-colors">
+        <i class="fa-solid fa-r font-bold text-lg"></i>
+      </div>
+      <span class="text-xl font-black tracking-tight text-brand-900 hidden sm:inline-block">
+        Route Posts
+      </span>
+    </a>
+
+    <!-- Navigation Links -->
+    <div class="flex items-center justify-center">
+      <ul class="flex items-center gap-1.5 p-1.5 bg-brand-50/80 border border-brand-200/80 rounded-full shadow-inner">
+        <li>
+          <a routerLink="/feed" routerLinkActive="!bg-brand-700 !text-white !shadow-sm hover:!bg-brand-800"
+            class="inline-flex items-center gap-2 py-2 px-5 text-brand-800 rounded-full bg-transparent hover:bg-brand-100 hover:text-brand-900 transition-all text-sm font-semibold cursor-pointer">
+            <i class="fa-solid fa-house"></i> <span class="hidden md:inline">Feed</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/profile" routerLinkActive="!bg-brand-700 !text-white !shadow-sm hover:!bg-brand-800"
+            class="inline-flex items-center gap-2 py-2 px-5 text-brand-800 rounded-full bg-transparent hover:bg-brand-100 hover:text-brand-900 transition-all text-sm font-semibold cursor-pointer">
+            <i class="fa-regular fa-user"></i> <span class="hidden md:inline">Profile</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/notifications" routerLinkActive="!bg-brand-700 !text-white !shadow-sm hover:!bg-brand-800"
+            class="inline-flex items-center gap-2 py-2 px-5 text-brand-800 rounded-full bg-transparent hover:bg-brand-100 hover:text-brand-900 transition-all text-sm font-semibold cursor-pointer">
+            <i class="fa-regular fa-comment"></i> <span class="hidden md:inline">Notifications</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- User Profile Pill & Dropdown -->
+    <div class="flex items-center relative">
+
+      <!-- User Menu Pill Button -->
+      <button type="button"
+        class="flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50/60 px-2 py-1.5 transition-all hover:bg-brand-100/60 focus:ring-4 focus:ring-brand-300 cursor-pointer"
+        id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+        data-dropdown-placement="bottom-end">
+        <span class="sr-only">Open user menu</span>
+
+        <!-- User Profile Image -->
+        <img [alt]="currentUser?.name" class="h-8 w-8 rounded-full object-cover border border-brand-300"
+          [src]="currentUser?.photo" />
+
+        <!-- User Name -->
+        <span class="hidden max-w-35 truncate text-sm font-semibold text-brand-900 md:block">
+          {{currentUser?.name}}
+        </span>
+        <i class="fa-solid fa-bars text-brand-700 text-xs ms-1"></i>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div class="z-50 hidden bg-white border border-brand-200 rounded-2xl shadow-xl w-52 overflow-hidden py-1.5 mt-2"
+        id="user-dropdown">
+        <ul class="text-sm text-brand-800 font-medium space-y-0.5 px-1.5" aria-labelledby="user-menu-button">
+          <li>
+            <a routerLink="/profile"
+              class="inline-flex items-center gap-2.5 w-full px-3.5 py-2.5 hover:bg-brand-50 hover:text-brand-900 rounded-xl transition-colors">
+              <i class="fa-regular fa-user text-brand-600 w-4"></i> Profile
+            </a>
+          </li>
+          <li>
+            <a routerLink="/change"
+              class="inline-flex items-center gap-2.5 w-full px-3.5 py-2.5 hover:bg-brand-50 hover:text-brand-900 rounded-xl transition-colors">
+              <i class="fa-solid fa-gear text-brand-600 w-4"></i> Settings
+            </a>
+          </li>
+          <li>
+            <hr class="my-1 border-brand-100">
+          </li>
+          <li>
+            <a (click)="logOut()"
+              class="inline-flex items-center gap-2.5 w-full px-3.5 py-2.5 hover:bg-red-50 hover:text-red-700 text-red-600 rounded-xl transition-colors cursor-pointer font-semibold">
+              <i class="fa-solid fa-right-from-bracket w-4"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mobile Menu Toggle Button -->
+      <!-- <button data-collapse-toggle="navbar-user" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-brand-700 rounded-xl md:hidden hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-brand-300 ms-2 transition-colors cursor-pointer"
+        aria-controls="navbar-user" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button> -->
+
+    </div>
+
+  </div>
+
+  <!-- Mobile Collapsible Navigation Menu -->
+  <!-- <div class="hidden w-full md:hidden px-4 pb-4 pt-2 border-t border-brand-100 bg-white" id="navbar-user">
+    <ul class="flex flex-col space-y-1 font-medium">
+      <li>
+        <a routerLink="/feed" class="flex items-center gap-2.5 px-4 py-2.5 text-brand-800 rounded-xl hover:bg-brand-50">
+          <i class="fa-solid fa-house"></i> Feed
+        </a>
+      </li>
+      <li>
+        <a routerLink="/profile"
+          class="flex items-center gap-2.5 px-4 py-2.5 text-brand-800 rounded-xl hover:bg-brand-50">
+          <i class="fa-regular fa-user"></i> Profile
+        </a>
+      </li>
+      <li>
+        <a routerLink="/notification"
+          class="flex items-center gap-2.5 px-4 py-2.5 text-brand-800 rounded-xl hover:bg-brand-50">
+          <i class="fa-regular fa-comment"></i> Notifications
+        </a>
+      </li>
+    </ul>
+  </div> -->
+</nav>

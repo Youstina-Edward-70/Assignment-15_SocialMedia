@@ -1,0 +1,102 @@
+<div class="mt-4 space-y-4 font-sans">
+
+  <!-- Header: Comments Counter -->
+  <div class="bg-white border border-brand-200/80 rounded-2xl p-4 shadow-2xs">
+    <div class="flex items-center gap-2.5">
+      <h3 class="text-base font-bold text-brand-900">Comments</h3>
+      <span class="bg-brand-100 text-brand-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
+        {{ comments().length }}
+      </span>
+    </div>
+  </div>
+
+  @if (isLoadingComments()) {
+  <div
+    class="bg-white border border-brand-200/80 rounded-3xl p-10 text-center flex flex-col items-center justify-center space-y-3 shadow-2xs">
+    <p class="text-sm text-brand-400 font-medium">Loading comments...</p>
+  </div>
+  }
+
+  <!-- No Comments Yet -->
+  @if (!isLoadingComments() && comments().length === 0) {
+  <div
+    class="bg-white border border-brand-200/80 rounded-3xl p-10 text-center flex flex-col items-center justify-center space-y-3 shadow-2xs">
+    <div
+      class="w-14 h-14 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-2xl border border-brand-100">
+      <i class="fa-regular fa-comment-dots"></i>
+    </div>
+    <div class="space-y-1">
+      <h4 class="text-base font-bold text-brand-900">No comments yet</h4>
+      <p class="text-xs text-brand-500 font-medium">Be the first to comment.</p>
+    </div>
+  </div>
+  }
+
+  <!-- Comments List -->
+  @if (comments().length > 0) {
+  <div class="space-y-3.5">
+    @for (comment of comments(); track comment._id) {
+    <app-single-comment [comment]="comment" [postId]="postId()" (deleted)="getComments(true); commentsChanged.emit()"
+      (likesChanged)="onLikesUpdated(comment._id, $event)">
+    </app-single-comment>
+    }
+
+    @if (hasNextPageComments()) {
+    <div class="pt-2 text-center">
+      <button (click)="getComments()"
+        class="rounded-full border border-brand-300 bg-white px-4 py-2 text-xs font-bold text-brand-700 transition hover:bg-brand-50 disabled:opacity-60 cursor-pointer">
+        View more comments
+      </button>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Add Comment Form -->
+  <form (submit)="createComment($event)" class="flex flex-col gap-3">
+    <div class="flex items-start gap-3 pt-2">
+      <img [src]="currentUser?.photo" [alt]="currentUser?.name"
+        class="w-10 h-10 rounded-full object-cover border border-brand-200 shrink-0 mt-1" />
+
+      <div
+        class="flex-1 bg-brand-50/60 border border-brand-200/80 rounded-2xl p-3.5 focus-within:border-brand-500 focus-within:bg-white transition-all shadow-2xs space-y-3">
+        <textarea [formControl]="commentContent" rows="2"
+          class="w-full bg-transparent border-none text-xs text-brand-900 placeholder-brand-400 resize-none outline-none focus:ring-0 p-0"
+          [placeholder]="`Comment as ${currentUser?.name}...`" aria-label="Write a new comment"></textarea>
+
+        <div class="flex items-center justify-between">
+          <input (change)="changeFiles($event)" type="file" id="fileComment" class="hidden" />
+          <label for="fileComment" class="cursor-pointer text-brand-700 group">
+            <i class="fa-regular fa-image text-emerald-600 group-hover:scale-110 transition-transform"></i>
+          </label>
+
+          <button type="submit" [disabled]="isCommenting() || !isFormValid()"
+            [class.cursor-not-allowed]="isCommenting() || !isFormValid()"
+            [class.cursor-pointer]="!isCommenting() && isFormValid()"
+            [class.hover:bg-brand-800]="!isCommenting() && isFormValid()"
+            [class.bg-brand-700]="!isCommenting() && isFormValid()"
+            [class.bg-brand-400]="isCommenting() || !isFormValid()"
+            class="w-8 h-8 rounded-full disabled:opacity-40 text-white flex items-center justify-center transition-all shadow-2xs">
+            @if(isCommenting()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            }
+            @else {
+            <i class="fa-regular fa-paper-plane text-xs"></i>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if(imgSrc()){
+    <div class="h-54 mb-4 overflow-hidden relative rounded-[10px]">
+      <span (click)="imgSrc.set('')" (click)="imgFile.set(null)"
+        class="bg-brand-900/80 text-brand-50 text-sm rounded-full py-1 px-1.5 absolute top-2 inset-e-2 cursor-pointer hover:scale-105 transition">
+        <i class="fa-solid fa-close"></i>
+      </span>
+      <img [src]="imgSrc()" alt="new-post" class="w-full h-full object-cover">
+    </div>
+    }
+  </form>
+
+</div>

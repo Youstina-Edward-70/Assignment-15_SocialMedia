@@ -1,0 +1,76 @@
+@if (isOpen()) {
+<div (click)="close()"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs transition-opacity">
+
+  <!-- Modal Box Container -->
+  <div (click)="$event.stopPropagation()"
+    class="bg-white border border-brand-200 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden p-5 relative font-sans animate-in fade-in zoom-in-95 duration-150">
+
+    <!-- Modal Header (Title & Close Button) -->
+    <div class="flex items-center justify-between pb-3.5 mb-2 border-b border-brand-100">
+
+      <div class="flex items-center gap-2.5">
+        <div class="text-brand-700 text-base">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+        <h3 class="text-base font-bold text-brand-900">
+          {{ title() }}
+        </h3>
+      </div>
+
+      <!-- Close Button (X) -->
+      <button (click)="close()" type="button"
+        class="text-brand-400 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+        aria-label="Close likes modal">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+    </div>
+
+    <!-- Reacted Users List Container -->
+    <div class="max-h-80 overflow-y-auto divide-y divide-brand-100/60 scrollbar-none">
+
+      @if (isLoadingLikes()) {
+      <div class="min-h-40 flex items-center justify-center text-brand-600">
+        Loading Likes...
+      </div>
+      } @else if (displayUsers().length === 0) {
+      <div class="min-h-40 flex items-center justify-center text-brand-500 text-sm">
+        No reactions yet
+      </div>
+      } @else {
+      @for (user of displayUsers(); track user._id) {
+      <div class="flex items-center justify-between py-3 px-1 hover:bg-brand-50/50 rounded-2xl transition-colors">
+
+        <!-- User Info (Avatar, Name & Username) -->
+        <div class="flex items-center gap-3 min-w-0">
+          <img [src]="user.photo" [alt]="user.name"
+            class="w-11 h-11 rounded-full object-cover shrink-0 bg-brand-50 border border-brand-200" />
+          <div class="flex flex-col min-w-0">
+            <span class="text-[14px] font-bold text-brand-900 truncate leading-tight">
+              {{ user.name }}
+            </span>
+            <span class="text-[13px] text-brand-500 truncate leading-tight mt-0.5">
+              {{ user.username }}
+            </span>
+          </div>
+        </div>
+      </div>
+      }
+      }
+
+    </div>
+
+    <!-- Modal Footer (Load More) -->
+    @if (!users() && hasNextPageLikes() && (likesCount() > 20 || reactUsers().length >= 20)) {
+    <div class="flex items-center justify-between pt-3.5 mb-2 border-t border-brand-100">
+      <button (click)="getReactedUsers()" type="button"
+        class="w-full rounded-xl py-2 text-brand-600 hover:text-brand-700 font-bold text-sm bg-brand-50 hover:bg-brand-100 text-center border border-brand-200/50 transition-colors cursor-pointer">
+        Load More
+      </button>
+    </div>
+    }
+  </div>
+</div>
+}
+

@@ -1,0 +1,47 @@
+<aside
+  class="w-full text-sm sticky top-20 bg-white rounded-[20px] shadow-sm border border-brand-200/60 p-2.5 grid max-xl:grid-cols-2 gap-1"
+  aria-label="Sidebar Navigation">
+
+  <!-- Feed Button -->
+  <button (click)="onTabChange('feed')" [class.bg-brand-700]="postService.activeTab() === 'feed'"
+    [class.text-white]="postService.activeTab() === 'feed'" [class.text-brand-900]="postService.activeTab() !== 'feed'"
+    [class.hover:bg-brand-50]="postService.activeTab() !== 'feed'"
+    class="flex items-center gap-4 p-2.5 cursor-pointer rounded-xl font-semibold transition-all duration-200">
+    <i [class.text-white]="postService.activeTab() === 'feed'"
+      class="fa-regular fa-newspaper w-5 text-center text-brand-700 transition-colors"></i>
+    <span>Feed</span>
+  </button>
+
+  <!-- My Posts Button -->
+  <button (click)="onTabChange('my-posts')" [class.bg-brand-700]="postService.activeTab() === 'my-posts'"
+    [class.text-white]="postService.activeTab() === 'my-posts'"
+    [class.text-brand-900]="postService.activeTab() !== 'my-posts'"
+    [class.hover:bg-brand-50]="postService.activeTab() !== 'my-posts'"
+    class="flex items-center gap-4 p-2.5 cursor-pointer rounded-xl font-semibold transition-all duration-200">
+    <i [class.text-white]="postService.activeTab() === 'my-posts'"
+      class="fa-solid fa-wand-magic-sparkles w-5 text-center text-brand-700 transition-colors"></i>
+    <span>My Posts</span>
+  </button>
+
+  <!-- Community Button -->
+  <button (click)="onTabChange('community')" [class.bg-brand-700]="postService.activeTab() === 'community'"
+    [class.text-white]="postService.activeTab() === 'community'"
+    [class.text-brand-900]="postService.activeTab() !== 'community'"
+    [class.hover:bg-brand-50]="postService.activeTab() !== 'community'"
+    class="flex items-center gap-4 p-2.5 cursor-pointer rounded-xl font-semibold transition-all duration-200">
+    <i [class.text-white]="postService.activeTab() === 'community'"
+      class="fa-solid fa-globe w-5 text-center text-brand-700 transition-colors"></i>
+    <span>Community</span>
+  </button>
+
+  <!-- Saved Button -->
+  <button (click)="onTabChange('saved')" [class.bg-brand-700]="postService.activeTab() === 'saved'"
+    [class.text-white]="postService.activeTab() === 'saved'"
+    [class.text-brand-900]="postService.activeTab() !== 'saved'"
+    [class.hover:bg-brand-50]="postService.activeTab() !== 'saved'"
+    class="flex items-center gap-4 p-2.5 cursor-pointer rounded-xl font-semibold transition-all duration-200">
+    <i [class.text-white]="postService.activeTab() === 'saved'"
+      class="fa-regular fa-bookmark w-5 text-center text-brand-700 transition-colors"></i>
+    <span>Saved</span>
+  </button>
+</aside>

@@ -1,0 +1,95 @@
+@if (isOpen() && !post().isShare) {
+<div (click)="close()"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs transition-opacity">
+
+  <!-- Modal Box Container -->
+  <div (click)="$event.stopPropagation()"
+    class="bg-white border border-brand-200 rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden p-6 relative font-sans animate-in fade-in zoom-in-95 duration-150">
+
+    <!-- Modal Header (Title & Close Button) -->
+    <div class="flex items-center justify-between pb-4 mb-4 border-b border-brand-100">
+      <h3 class="text-lg font-bold text-brand-900">
+        Share post
+      </h3>
+
+      <!-- Close Button (X) -->
+      <button (click)="close()" type="button"
+        class="text-brand-400 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+        aria-label="Close share modal">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="space-y-4">
+
+      <!-- Textarea for writing thoughts about the post -->
+      <div class="border border-brand-200 rounded-2xl focus-within:border-brand-500 transition-colors bg-white">
+        <textarea [formControl]="sharebody" rows="3"
+          class="w-full bg-transparent border-none text-[14px] text-brand-900 placeholder-brand-400 resize-none outline-none focus:outline-none focus:ring-0 p-3"
+          placeholder="Say something about this..." aria-label="Say something about this"></textarea>
+      </div>
+
+      <!-- Embedded Post Card Preview (Inside Modal) -->
+      <div
+        class="border border-brand-200 rounded-2xl p-4 bg-brand-50/30 space-y-3 max-h-72 overflow-y-auto scrollbar-none">
+
+        <!-- Original Author Info -->
+        <div class="flex items-center gap-3">
+          <img [src]="post().user.photo" [alt]="post().user.name"
+            class="w-10 h-10 rounded-full object-cover border border-brand-200 bg-brand-50" />
+          <div class="flex flex-col">
+            <span class="text-sm font-bold text-brand-900 leading-tight">
+              {{ post().user.name }}
+            </span>
+            <span class="text-xs text-brand-500 leading-tight mt-0.5">
+              {{ '@' + post().user.username }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Original Post Text Body -->
+        @if (post().body) {
+        <p class="text-sm text-brand-900 leading-normal wrap-break-word">
+          {{ post().body }}
+        </p>
+        }
+
+        <!-- Original Post Image (If available) -->
+        @if (post().image) {
+        <div class="rounded-xl overflow-hidden border border-brand-200/60 max-h-56">
+          <img [src]="post().image" class="w-full h-full object-cover" alt="Shared post attachment" />
+        </div>
+        }
+
+      </div>
+
+    </div>
+
+    <!-- Modal Footer (Cancel & Share Now Buttons) -->
+    <div class="flex items-center justify-end gap-3 pt-5 mt-5 border-t border-brand-100">
+
+      <!-- Cancel Button -->
+      <button (click)="close()" type="button"
+        class="px-5 py-2.5 rounded-xl border border-brand-300 text-brand-800 hover:bg-brand-50 font-bold text-sm transition-colors cursor-pointer">
+        Cancel
+      </button>
+
+      <!-- Share Now Action Button -->
+      <button (click)="confirmShare()" type="button" [disabled]="isSharing()"
+        [class]="isSharing() ? 'bg-brand-400 cursor-not-allowed' : 'bg-brand-700 hover:bg-brand-800 cursor-pointer'"
+        class="px-6 py-2.5 rounded-xl text-white font-bold text-sm shadow-sm transition-colors flex items-center gap-2">
+        @if (isSharing()) {
+          <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+          <span>Sharing...</span>
+        } @else {
+          <span>Share now</span>
+        }
+      </button>
+
+    </div>
+
+  </div>
+</div>
+}
+
